@@ -1,15 +1,13 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
 using System.Drawing;
 using System.Globalization;
-using System.Linq;
-using System.Text;
-using System.Threading;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 
+/// <summary>
+/// 一个简单的机器代码的模拟
+/// 出自《计算机科学概论》第12版附录C
+/// “Computer Science： An overview, 12th Edition, Appendix C
+/// </summary>
 namespace MiniPai
 {
     public partial class MiniPaiForm : Form

@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 
-
+/// <summary>
+/// 该机器有16个通用寄存器
+/// </summary>
 namespace MiniPai
 {
 
