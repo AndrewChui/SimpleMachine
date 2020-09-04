@@ -239,7 +239,9 @@ namespace MiniPai
 
                 case 7:
                     //指令： 7RST
-                     
+                    //将寄存器S及寄存器T中的二进制数做或（OR)操作，并将结果存放在寄存器R中
+                    //7CB4将使得寄存器B和寄存器4的内容做或操作的结果存放在寄存器C中
+
                     regList[parseInstruct.regAddress01].Value =
                      (byte)(regList[parseInstruct.regAddress02].Value | regList[parseInstruct.regAddress03].Value);
                     runInfo.instructionsAccout++;
@@ -247,7 +249,12 @@ namespace MiniPai
                     runInfo.addressNum = parseInstruct.regAddress01;
                     PCAddress += 2;
                     break;
+
                 case 8:
+                    //指令： 8RST
+                    //将寄存器S及寄存器T中的二进制数做与（AND)操作，并将结果存放在寄存器R中
+                    //8045将使得寄存器4和寄存器5的内容做与操作的结果存放在寄存器0中
+
                     regList[parseInstruct.regAddress01].Value =
                      (byte)(regList[parseInstruct.regAddress02].Value & regList[parseInstruct.regAddress03].Value);
                     runInfo.instructionsAccout++;
@@ -255,7 +262,12 @@ namespace MiniPai
                     runInfo.addressNum = parseInstruct.regAddress01;
                     PCAddress += 2;
                     break;
+
                 case 9:
+                    //指令： 9RST
+                    //将寄存器S和寄存器T中的二进制数进行异或（EXCLUSIVE OR)操作，并将结果存放在寄存器R中
+                    //95F3将使得寄存器F和寄存器3的内容进行异或操作的结果存放在寄存器5中
+
                     regList[parseInstruct.regAddress01].Value =
                     (byte)(regList[parseInstruct.regAddress02].Value ^ regList[parseInstruct.regAddress03].Value);
                     runInfo.instructionsAccout++;
@@ -263,7 +275,12 @@ namespace MiniPai
                     runInfo.addressNum = parseInstruct.regAddress01;
                     PCAddress += 2;
                     break;
+
                 case 0xA:
+                    //指令： AR0X
+                    //将寄存器R中的二进制数循环（ROTATE)右移一位，进行X次。每次从低位端开始的那个位放入高端
+                    //例：A403将使得寄存器4中的内容循环右移3位
+
                     regList[parseInstruct.regAddress01].Value =
                        (byte)(regList[parseInstruct.regAddress01].Value >> parseInstruct.regAddress02);
                     runInfo.instructionsAccout++;
@@ -271,7 +288,15 @@ namespace MiniPai
                     runInfo.addressNum = parseInstruct.regAddress01;
                     PCAddress += 2;
                     break;
+
                 case 0xB:
+                    //指令： BRXY
+                    //如果寄存器R中的位模式等于寄存器0中的位模式，那么转移（JUMP)到地址XY处的存储单元中的指令；
+                    //否则，继续正常的执行顺序（转移是通过在执行周期将XY复制到程序计数器来实现的）
+                    //例：B43C将首先比较寄存器4和寄存器0中的内容。如果二者相等，则把
+                    //模式3C放入程序计数器，所以下一条执行的指令将是这个存储地址中的那条；
+                    //否则，不做任何事情，程序将照常继续
+
                     if (regList[parseInstruct.regAddress01].Value == regList[0].Value)
                     {
                         PCAddress = parseInstruct.memAddress;
@@ -281,14 +306,26 @@ namespace MiniPai
                         PCAddress += 2;
                     }
                     break;
+
                 case 0xC:
+                    //指令： C000
+                    //停止（HALT)执行
+                    //例：C000将使得程序停止执行
+                    
                     stopMachine = true;
                     PCAddress += 2;
                     break;
             }
             return true;
         }
-
+        /// <summary>
+        /// 将一个以machine格式存储的实数转化位实数
+        /// 存储格式：
+        /// 一个实数以8bit存储；其中最高位存储的是尾数的符号位；接下来3位以余码的形式存储指数
+        /// 低四位存储尾数
+        /// </summary>
+        /// <param name="regByte">以指定格式存储的实数</param>
+        /// <returns>转换后的结果</returns>
         private float ParseFloat(byte regByte)
         {
             float rearNumber = (float)(regByte & 0x0F);
