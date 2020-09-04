@@ -8,8 +8,10 @@ using System.Windows.Forms;
 /// 出自《计算机科学概论》第12版附录C
 /// “Computer Science： An overview, 12th Edition, Appendix C
 /// </summary>
+
 namespace MiniPai
 {
+    
     public partial class MiniPaiForm : Form
     {
         public MiniPaiForm()
@@ -17,18 +19,26 @@ namespace MiniPai
             InitializeComponent();
         }
 
+        //未改变的数值是regularForeColor，改变了的数值用changeForeColor显示
         private readonly Color regularForeColor = Color.Black;
         private readonly Color changeForeColor = Color.Red;
 
         private Machine machine = new Machine();
+        
+        //绑定寄存器数据值的显示
         private BindingSource regBindingSource = new BindingSource();
+        
+        //绑定内存数据值的显示
         private BindingSource memBindingSource = new BindingSource();
+        
+        //设置初始化datagrid控件
         private void MiniPaiForm_Load(object sender, EventArgs e)
         {
             SetupRegDataGridView();
             pcAddresstextBox.Text = machine.PCAddress.ToString();
         }
 
+        
         private void SetupRegDataGridView()
         {
             regBindingSource.DataSource = machine.regList;
@@ -66,6 +76,7 @@ namespace MiniPai
 
         }
 
+        
         private void regClear_Click(object sender, EventArgs e)
         {
             if (regNumberTextBox.Text != "")
@@ -100,7 +111,7 @@ namespace MiniPai
                 }
             }
         }
-
+        
         private void newToolStripMenuItem_Click(object sender, EventArgs e)
         {
 
